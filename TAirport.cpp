@@ -23,15 +23,12 @@ void TAirport::addLA(TLA* LA) {
 void TAirport::Do(float t0, float tk) {
   unsigned LA_n = 0, LA_cur = 0;
   vector<float> pos;
-  bool a, ff = f;
-  for (float t = t0; t < tk; t += dt) {
+  bool a;
+  for (float t = t0; t <= tk; t += dt) {
     LA_n = 0;
     cout << fixed << setprecision(2) << '[' << t << "s]\n";
     for (auto& la : LA) {
       pos = la->getPos();
-      if (!la->get_f() && !ff) {
-        ff = true;
-      }
       if (!la->getLanding() && LA_cur == LA_n) {
         cout << "LA " << LA_n + 1 << "[landing]: x: " << pos[0] << " y : " << pos[1] << endl;
         la->move(t, la->get_a(f, x, y, l));

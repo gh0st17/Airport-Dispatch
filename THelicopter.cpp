@@ -20,7 +20,7 @@ bool THelicopter::get_a(bool& air_f, float& air_x, float& air_y, float& air_l) {
 }
 
 void THelicopter::updateLanding(float& air_x, float& air_y, float& air_l, unsigned* air_f, unsigned& n) {
-  float x = powf(x - air_x, 2), y = powf(y - air_y, 2), air = powf(air_l / 50, 2);
+  float x = powf(this->x - air_x, 2), y = powf(this->y - air_y, 2), air = powf(air_l / 50, 2);
   
   if (x + y < air && f) {
     landing = true;
