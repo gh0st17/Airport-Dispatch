@@ -20,17 +20,17 @@ struct stats{
 class TAirport : public TAObject {
   private:
   mutex locker;
-  float t = 0, l;
+  float l;
   vector<TLA*> LA;
   vector<stats> stats_data;
+  chrono::steady_clock::time_point t1 = chrono::high_resolution_clock::now();
 
-  void land(bool& allow_landing, TLA* la);
+  void land(atomic_bool& allow_landing, TLA* la);
   bool isAllLanded();
-  void update(float& t0, float& tk);
 
   public:
   TAirport(float x, float y, float l);
   ~TAirport();
   void addLA(TLA* LA);
-  void Do(float t0, float tk);
+  void Do();
 };

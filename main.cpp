@@ -7,13 +7,13 @@ using namespace std;
 
 int main() {
   unsigned n = 0;
-  TAirport air(.0f, 300.0f, 3000.0f);
-  air.addLA(new TAircraft(n++, 575.0f, 400.0f, 210.0f, 15.0f, 600.0f));
-  air.addLA(new THelicopter(n++, .0f, 580.0f, 28.0f, -1.0f, 1.0f));
-  air.addLA(new THelicopter(n++, 2.0f, 450.0f, 25.0f, -2.0f, 1.0f));
-  air.addLA(new TAircraft(n++, -600.0f, 350.0f, 220.0f, .0f, 100.0f));
+  TAirport air(.0f, 300.f, 3000.f);
+  air.addLA(new TAircraft(n++, 375.f, 400.f, 210.f, 15.f, 30.f));
+  air.addLA(new THelicopter(n++, .0f, 380.f, 35.f, -1.f, 1.f));
+  air.addLA(new THelicopter(n++, 2.f, 350.f, 40.f, -2.f, 1.f));
+  air.addLA(new TAircraft(n++, -300.f, 350.f, 220.f, .0f, 25.f));
 
-  air.Do(.0f, 3600.0f);
+  air.Do();
 
   return 0;
 }
