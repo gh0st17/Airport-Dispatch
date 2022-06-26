@@ -76,8 +76,11 @@ void TAirport::Do(float t0, float tk) {
 
 void TAirport::update(float& t0, float& tk) {
   t = t0;
-  while (!isAllLanded())
+  while (!isAllLanded()) {
+    locker.lock();
     t += dt;
+    locker.unlock();
+  }
   locker.lock();
   for (const auto& x : stats_data) {
     cout << "LA " << x.LA_n + 1 << " landed at " << x.t_landing;
