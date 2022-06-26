@@ -36,7 +36,7 @@ void TAirport::Do(float t0, float tk) {
         la->move(t, la->get_a(f, x, y, l));
         la->updateLanding(x, y, l);
         if (la->getLanding()) {
-          stats_data[LA_n] = { LA_cur, t, t };
+          stats_data[LA_n] = { LA_cur + 1, (LA_cur > 0 ? t - stats_data[LA_cur - 1].t_landing : 0), t };
           LA_cur++;
           if(dynamic_cast<TAircraft*>(la) != nullptr)
             cout << "Aircraft " << LA_n + 1 << " landed\n";
@@ -53,6 +53,10 @@ void TAirport::Do(float t0, float tk) {
     }
     if (isAllLanded())
       break;
+  }
+  for (const auto& x : stats_data) {
+    cout << "LA " << x.LA_n << " landed at " << x.t_landing;
+    cout << " seconds, wait time " << x.t_wait << " seconds\n";
   }
   cout << "Done\n";
 }
