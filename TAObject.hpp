@@ -3,7 +3,7 @@
 
 class TAObject {
   protected:
-  float dt = .1f, x, y;
+  float dt = .5f, x, y;
   bool f = false;
 
   public:

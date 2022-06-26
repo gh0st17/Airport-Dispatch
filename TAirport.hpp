@@ -26,11 +26,11 @@ class TAirport : public TAObject {
 
   void land(bool& allow_landing, TLA* la);
   bool isAllLanded();
+  void update(float& t0, float& tk);
 
   public:
   TAirport(float x, float y, float l);
   ~TAirport();
   void addLA(TLA* LA);
-  void Do(float& t0, float& tk);
-  void update(float t0, float tk);
+  void Do(float t0, float tk);
 };

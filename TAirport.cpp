@@ -63,25 +63,25 @@ void TAirport::land(bool& allow_landing, TLA* la) {
     }
 }
 
-void TAirport::update(float t0, float tk) {
+void TAirport::Do(float t0, float tk) {
   bool allow_landing = true;
   vector<thread> threads;
   cout.setf(ios::fixed);
   for (const auto& x : LA)
     threads.push_back(thread(&TAirport::land, this, ref(allow_landing), x));
 
-  threads.push_back(thread(&TAirport::Do, this, ref(t0), ref(tk)));
+  threads.push_back(thread(&TAirport::update, this, ref(t0), ref(tk)));
 	for_each(threads.begin(), threads.end(), mem_fn(&thread::join));
 }
 
-void TAirport::Do(float& t0, float& tk) {
+void TAirport::update(float& t0, float& tk) {
   t = t0;
   while (!isAllLanded())
     t += dt;
   locker.lock();
   for (const auto& x : stats_data) {
-    cout << "LA " << x.LA_n << " landed at " << x.t_landing;
-    cout << " seconds, wait time " << x.t_wait << " seconds\n";
+    cout << "LA " << x.LA_n + 1 << " landed at " << x.t_landing;
+    cout << " sec, wait " << x.t_wait << " sec\n";
   }
   cout << "Done\n";
   locker.unlock();
