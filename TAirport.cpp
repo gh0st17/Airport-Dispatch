@@ -65,9 +65,9 @@ void TAirport::land(atomic_bool& allow_landing, TLA* la) {
         locker.lock();
         cout << "LA " << la->n + 1 << setprecision(2) << " (" << setw(7) << pos[0];
         cout << ',' << setw(7) << pos[1] << ")[waiting]\n";
-        locker.unlock();
         if(dynamic_cast<TAircraft*>(la) != nullptr)
           la->move(time, la->get_a(f, x, y, l));
+        locker.unlock();
       }
     }
 }
