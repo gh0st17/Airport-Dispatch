@@ -23,12 +23,9 @@ bool TAircraft::get_a(bool& air_f, float& air_x, float& air_y, float& air_l) {
   }
 }
 
-void TAircraft::updateLanding(float& air_x, float& air_y, float& air_l, unsigned* air_f, unsigned& n) {
-  if (x < air_x + air_l && f) {
+void TAircraft::updateLanding(float& air_x, float& air_y, float& air_l) {
+  if (x < air_x + air_l && f)
     landing = true;
-    (*air_f)++;
-    cout << "Aircraft " << n + 1 << " landed\n";
-  }
   else if (f)
     landing = false;
 }

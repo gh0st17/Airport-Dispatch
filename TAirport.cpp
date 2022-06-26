@@ -21,18 +21,28 @@ void TAirport::addLA(TLA* LA) {
 }
 
 void TAirport::Do(float t0, float tk) {
+  stats_data.resize(LA.size());
   unsigned LA_n = 0, LA_cur = 0;
   vector<float> pos;
   bool a;
+  cout.setf(ios::fixed);
   for (float t = t0; t <= tk; t += dt) {
     LA_n = 0;
-    cout << fixed << setprecision(2) << '[' << t << "s]\n";
+    cout << setprecision(2) << '[' << t << "s]\n";
     for (auto& la : LA) {
       pos = la->getPos();
       if (!la->getLanding() && LA_cur == LA_n) {
         cout << "LA " << LA_n + 1 << '(' << setw(7) << pos[0] << ',' << setw(7) << pos[1] << ")[landing]\n";
         la->move(t, la->get_a(f, x, y, l));
-        la->updateLanding(x, y, l, &LA_cur, LA_n);
+        la->updateLanding(x, y, l);
+        if (la->getLanding()) {
+          stats_data[LA_n] = { LA_cur, t, t };
+          LA_cur++;
+          if(dynamic_cast<TAircraft*>(la) != nullptr)
+            cout << "Aircraft " << LA_n + 1 << " landed\n";
+          else if(dynamic_cast<THelicopter*>(la) != nullptr)
+            cout << "Helicopter " << LA_n + 1 << " landed\n";
+        }
       }
       else if (!la->getLanding()) {
         cout << "LA " << LA_n + 1 << '(' << setw(7) << pos[0] << ',' << setw(7) << pos[1] << ")[waiting]\n";
