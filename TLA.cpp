@@ -2,7 +2,8 @@
 
 using namespace std;
 
-TLA::TLA(float x, float y, float V, float xc, float yc) : TAObject (x, y) {
+TLA::TLA(unsigned n, float x, float y, float V, float xc, float yc) : TAObject (x, y) {
+  this->n = n;
   this->V = V;
   this->xc = xc;
   this->yc = yc;

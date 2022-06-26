@@ -3,8 +3,7 @@
 
 class TAObject {
   protected:
-  const float dt = .5f;
-  float x, y;
+  float dt = .1f, x, y;
   bool f = false;
 
   public:

@@ -8,7 +8,9 @@ class TLA : public TAObject {
     bool landing = false;
 
   public:
-    TLA(float x, float y, float V, float xc, float yc);
+    bool took = false;
+    unsigned n;
+    TLA(unsigned n, float x, float y, float V, float xc, float yc);
     virtual void move(float t, bool a) {};
     virtual bool get_a(bool& air_f, float& air_x, float& air_y, float& air_l) { return false; };
     bool get_f() { return f; }
