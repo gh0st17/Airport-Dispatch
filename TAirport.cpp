@@ -28,38 +28,35 @@ void TAirport::land(bool& allow_landing, TLA* la) {
   if (la != nullptr)
     while (!la->getLanding()) {
       pos = la->getPos();
+      locker.lock();
       if (allow_landing && !la->took) {
         allow_landing = false;
         la->took = true;
       }
       if (la->took) {
-        locker.lock();
         cout << "LA " << la->n + 1 << setprecision(2) << " (" << setw(8) << pos[0];
         cout << ',' << setw(8) << pos[1] << ")[landing]\n";
-        locker.unlock();
         la->move(t, la->get_a(f, x, y, l));
         la->updateLanding(x, y, l);
         if (la->getLanding()) {
-          locker.lock();
           stats_data.push_back(stats(la->n,
             (stats_data.size() > 0 ? t - stats_data.back().t_landing : 0), t));
           if(dynamic_cast<TAircraft*>(la) != nullptr)
             cout << "Aircraft " << la->n + 1 << " landed\n";
           else if(dynamic_cast<THelicopter*>(la) != nullptr)
             cout << "Helicopter " << la->n + 1 << " landed\n";
-          locker.unlock();
           allow_landing = true;
+          locker.unlock();
           break;
         }
       }
       else if (!la->getLanding() && !la->took) {
-        locker.lock();
         cout << "LA " << la->n + 1 << setprecision(2) << " (" << setw(8) << pos[0];
         cout << ',' << setw(8) << pos[1] << ")[waiting]\n";
-        locker.unlock();
         if(dynamic_cast<TAircraft*>(la) != nullptr)
           la->move(t, la->get_a(f, x, y, l));
       }
+      locker.unlock();
     }
 }
 

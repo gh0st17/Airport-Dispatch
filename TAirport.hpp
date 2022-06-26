@@ -20,7 +20,7 @@ struct stats{
 class TAirport : public TAObject {
   private:
   mutex locker;
-  float t, l;
+  float t = 0, l;
   vector<TLA*> LA;
   vector<stats> stats_data;
 

@@ -4,7 +4,7 @@
 using namespace std;
 
 void THelicopter::move(float t, bool a) {
-  x -= -a * V * cosf(phi) * dt;
+  x -= -1 * a * V * cosf(phi) * dt;
   y -= a * V * sinf(phi) * dt;
 }
 
