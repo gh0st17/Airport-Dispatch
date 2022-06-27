@@ -3,6 +3,8 @@
 #include <vector>
 #include <chrono>
 #include <thread>
+#include <atomic>
+#include <barrier>
 #include <algorithm>
 #include <functional>
 #include "TAirport.hpp"
@@ -26,7 +28,7 @@ void TAirport::addLA(TLA* LA) {
 
 typedef chrono::duration<float> fsec;
 
-void TAirport::land(atomic_bool& allow_landing, TLA* la) {
+void TAirport::land(atomic<bool>& allow_landing, TLA* la) {
   vector<float> pos;
   auto t2 = chrono::high_resolution_clock::now();
   fsec duration;
@@ -37,19 +39,19 @@ void TAirport::land(atomic_bool& allow_landing, TLA* la) {
       duration = t2 - t1;
       time = duration.count();
       pos = la->getPos();
-      if (allow_landing && !la->took) {
+      if (allow_landing && !la->getTook()) {
         allow_landing = false;
-        la->took = true;
+        la->setTook(true);
       }
-      if (la->took) {
+      if (la->getTook()) {
         locker.lock();
         cout << "LA " << la->n + 1 << setprecision(2) << " (" << setw(7) << pos[0];
         cout << ',' << setw(7) << pos[1] << ")[landing]\n";
         locker.unlock();
+        this_thread::sleep_for(chrono::milliseconds(150));
         la->move(time, la->get_a(f, x, y, l));
         la->updateLanding(x, y, l);
         if (la->getLanding()) {
-          locker.lock();
           stats_data.push_back(stats(la->n,
             (stats_data.size() > 0 ? time - stats_data.back().t_landing : 0), time));
           if(dynamic_cast<TAircraft*>(la) != nullptr)
@@ -57,42 +59,33 @@ void TAirport::land(atomic_bool& allow_landing, TLA* la) {
           else if(dynamic_cast<THelicopter*>(la) != nullptr)
             cout << "Helicopter " << la->n + 1 << " landed\n";
           allow_landing = true;
-          locker.unlock();
           break;
         }
       }
-      else if (!la->getLanding() && !la->took) {
+      else if (!la->getLanding() && !la->getTook()) {
         locker.lock();
         cout << "LA " << la->n + 1 << setprecision(2) << " (" << setw(7) << pos[0];
         cout << ',' << setw(7) << pos[1] << ")[waiting]\n";
+        locker.unlock();
+        this_thread::sleep_for(chrono::milliseconds(1500));
         if(dynamic_cast<TAircraft*>(la) != nullptr)
           la->move(time, la->get_a(f, x, y, l));
-        locker.unlock();
       }
     }
 }
 
 void TAirport::Do() {
-  atomic_bool allow_landing = true;
+  atomic<bool> allow_landing = true;
   vector<thread> threads;
   cout.setf(ios::fixed);
   for (const auto& x : LA)
     threads.push_back(thread(&TAirport::land, this, ref(allow_landing), x));
 
-  //threads.push_back(thread(&TAirport::update, this));
-	for_each(threads.begin(), threads.end(), mem_fn(&thread::join));
+  for_each(threads.begin(), threads.end(), mem_fn(&thread::join));
 
   for (const auto& x : stats_data) {
     cout << "LA " << x.LA_n + 1 << " landed at " << setprecision(3) << x.t_landing;
     cout << " sec, wait " << x.t_wait << " sec\n";
   }
   cout << "Done\n";
-}
-
-bool TAirport::isAllLanded() {
-  for (const auto& la : LA)
-    if (!la->getLanding())
-      return false;
-
-  return true;
 }

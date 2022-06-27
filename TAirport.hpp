@@ -25,8 +25,7 @@ class TAirport : public TAObject {
   vector<stats> stats_data;
   chrono::steady_clock::time_point t1 = chrono::high_resolution_clock::now();
 
-  void land(atomic_bool& allow_landing, TLA* la);
-  bool isAllLanded();
+  void land(atomic<bool>& allow_landing, TLA* la);
 
   public:
   TAirport(float x, float y, float l);

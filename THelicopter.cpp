@@ -3,12 +3,14 @@
 
 using namespace std;
 
-void THelicopter::move(float t, bool a) {
+void THelicopter::move(const float& t, const bool a) {
   x -= -1 * a * V * cosf(phi);
   y -= a * V * sinf(phi);
 }
 
-bool THelicopter::get_a(bool& air_f, float& air_x, float& air_y, float& air_l) {
+bool THelicopter::get_a(const bool& air_f, const float& air_x,
+  const float& air_y, const float& air_l) {
+
   if (!(air_f)) {
     return true;
   }
